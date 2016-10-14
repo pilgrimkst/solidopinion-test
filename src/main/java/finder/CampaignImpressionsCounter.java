@@ -19,7 +19,7 @@ public class CampaignImpressionsCounter {
     public long addImpression(int companyId) {
         AtomicLong c = getCounterForId(companyId);
         LOGGER.debug("Increasing impressions for campaign {}, impressions: {}", companyId, campaignImpressions);
-        return c.incrementAndGet();
+        return c.getAndIncrement();
     }
 
     private AtomicLong getCounterForId(int companyId) {

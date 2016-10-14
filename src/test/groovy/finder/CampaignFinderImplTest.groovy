@@ -1,3 +1,5 @@
+package finder
+
 import finder.CampaignFinderImpl
 import finder.CampaignImpressionsCounter
 import finder.index.CampaignIndex
