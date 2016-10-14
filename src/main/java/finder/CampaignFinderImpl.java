@@ -4,8 +4,10 @@ import finder.index.CampaignIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Long.compare;
 import static java.util.stream.Collectors.counting;
@@ -13,9 +15,9 @@ import static java.util.stream.Collectors.groupingBy;
 
 public class CampaignFinderImpl implements CampaignFinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(CampaignFinderImpl.class);
+
     private final CampaignIndex index;
     private final CampaignImpressionsCounter impressionsCounter;
-    private final Map<Integer, AtomicLong> campaignImpressions = new HashMap<>();
 
     public CampaignFinderImpl(CampaignIndex index, CampaignImpressionsCounter impressionsCounter) {
         this.index = index;
@@ -26,9 +28,9 @@ public class CampaignFinderImpl implements CampaignFinder {
     public Optional<String> find(List<Integer> userSegments) {
         LOGGER.debug("Searching campaigns for segments: {}", userSegments);
 
-        Map<Integer, Long> weighedCampaigns = userSegments
+        Map<String, Long> weighedCampaigns = userSegments
                 .stream()
-                .map(index::campaignIdsForSegment)
+                .map(index::campaignsForSegment)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .flatMap(Collection::stream)
@@ -36,7 +38,7 @@ public class CampaignFinderImpl implements CampaignFinder {
 
         LOGGER.debug("Campaigns results: {}", weighedCampaigns);
 
-        Optional<Integer> bestScoreCampaign = weighedCampaigns
+        Optional<String> bestScoreCampaign = weighedCampaigns
                 .entrySet()
                 .stream()
                 .max((o1, o2) -> {
@@ -55,13 +57,7 @@ public class CampaignFinderImpl implements CampaignFinder {
 
         LOGGER.debug("Campaign with best score: {}", bestScoreCampaign);
 
-        return bestScoreCampaign.flatMap(index::campaignNameForId);
-    }
-
-    private void addImpressionForCompany(Integer i) {
-        AtomicLong impressions = campaignImpressions.getOrDefault(i, new AtomicLong());
-        impressions.incrementAndGet();
-        campaignImpressions.put(i, impressions);
+        return bestScoreCampaign;
     }
 
 }

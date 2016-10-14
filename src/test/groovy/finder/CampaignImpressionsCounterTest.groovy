@@ -9,19 +9,19 @@ class CampaignImpressionsCounterTest extends Specification {
         def c = new CampaignImpressionsCounter()
 
         when:
-        def result = c.addImpression(1)
+        def result = c.addImpression("a")
 
         then:
         result == 0l
 
         when:
-        result = c.addImpression(1)
+        result = c.addImpression("a")
 
         then:
         result == 1l
 
         when:
-        result = c.getImpressions(1)
+        result = c.getImpressions("a")
 
         then:
         result == 2l
@@ -32,7 +32,7 @@ class CampaignImpressionsCounterTest extends Specification {
         def c = new CampaignImpressionsCounter()
 
         when:
-        def result = c.getImpressions(1)
+        def result = c.getImpressions("a")
 
         then:
         result == 0l
