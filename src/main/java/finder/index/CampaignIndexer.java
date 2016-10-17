@@ -15,17 +15,20 @@ public class CampaignIndexer {
         LOGGER.info("Reading data from stream");
         CampaignIndexImpl index = new CampaignIndexImpl();
         String line;
+        int totalLines = 0;
+        long start = System.currentTimeMillis();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(data))) {
             while ((line = br.readLine()) != null) {
-                LOGGER.debug("Extracting data from line: {}", line);
+                LOGGER.trace("Extracting data from line: {}", line);
                 String[] xs = line.split("\\s+");
                 Collection<Integer> segments = extractSegments(xs);
                 index.addToIndex(xs[0], segments);
+                totalLines++;
             }
         } catch (IOException e) {
-            LOGGER.warn("Can't proceed, exception raised {}", e.getMessage());
+            LOGGER.warn("Can't proceed, exception raised {}, error line {}", e.getMessage(), totalLines);
         }
-        LOGGER.info("Index successfully loaded from input stream");
+        LOGGER.info("Index successfully loaded {} items from input stream, for {} ms", totalLines, System.currentTimeMillis() - start);
         return index;
     }
 
