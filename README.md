@@ -1,5 +1,8 @@
-#Specification
+# Implementation notes.
+* Special case for preventing campaign starving implemented by maintaining impressions counter for every campaign. Could be implemented simpler, by randomizing return from campaigns with equal scores
+* Reverse index implemented on `HashMap`, considering task specification, it is also possible to implement in based on `Array` since segment ids are withing `Int` bounds. This can lead to more optimized memory consumption, `HashMap` solution is better for sparse segment ids distribution, and are more tolerant to adding values to index at later time 
 
+#Specification
 The program will take a single argument, a file containing a list of campaigns.
 This file will consist of several rows, each with a variable number of columns.
 The first column is the unique identifier of a campaign (a single word). The
