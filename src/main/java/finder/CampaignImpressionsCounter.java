@@ -26,6 +26,7 @@ public class CampaignImpressionsCounter {
         AtomicLong c = campaignImpressions.get(companyId);
         if (c == null) {
             c = new AtomicLong(0);
+            companyId = companyId.intern();
             campaignImpressions.putIfAbsent(companyId, c);
             c = campaignImpressions.get(companyId);
         }

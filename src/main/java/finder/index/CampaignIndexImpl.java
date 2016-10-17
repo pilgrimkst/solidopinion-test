@@ -21,7 +21,7 @@ public class CampaignIndexImpl implements CampaignIndex, IndexInitializer {
             if (campaigns == null) {
                 segmentsToCampaigns.putIfAbsent(s, new ConcurrentHashMap<>(16, 1.0f, 1));
             }
-            segmentsToCampaigns.get(s).putIfAbsent(name, Boolean.TRUE);
+            segmentsToCampaigns.get(s).putIfAbsent(name.intern(), Boolean.TRUE);
         });
     }
 }
